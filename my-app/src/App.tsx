@@ -47,8 +47,11 @@ const App:React.FC = () => {
     setData(data.filter((e) => e.id !== id));
   }
 
-  function openAdd(){
-    setIsOpenAdd(true);
+  function openAdd() {
+    setIsOpenEdit(false);
+    setTask('');          
+    setDesc('');       
+    setIsOpenAdd(true); 
   }
 
   function closeAdd(){
@@ -116,49 +119,65 @@ const App:React.FC = () => {
 
   return (
     <div className="w-[60%] m-auto h-[400px] mt-[8%]">
-      <button className="py-1 rounded text-white my-5 cursor-pointer px-4 bg-blue-600" onClick={openAdd}>
-        Add +
-      </button>
-
-      {isOpenAdd && (
-        <div className="w-[300px] m-auto py-7 gap-5 flex flex-col justify-center items-center">
-          <input type="text" placeholder="Enter the task" className="border-2 border-blue-300 rounded-xl py-1 px-5" value={task} onChange={(e) => setTask(e.target.value)} />
-          <textarea placeholder="Enter the description" className="border-2 border-blue-300 rounded-xl py-1 px-7" value={desc} onChange={(e) => setDesc(e.target.value)} />
-          <div className="flex gap-3">
-            <button className="py-1 rounded text-white cursor-pointer px-4 bg-blue-600" onClick={handleAdd}>Save</button>
-            <button className="py-1 rounded text-white cursor-pointer px-4 bg-red-600" onClick={closeAdd}>Cancel</button>
-          </div>
+    <button className="py-1 rounded text-white my-5 cursor-pointer px-4 bg-blue-600" onClick={openAdd}>
+      Add +
+    </button>
+  
+    {isOpenAdd && (
+      <div className="w-[300px] m-auto py-7 gap-5 flex flex-col justify-center items-center">
+        <input type="text" placeholder="Enter the task" className="border-2 border-blue-300 rounded-xl py-1 px-5" value={task} onChange={(e) => setTask(e.target.value)} />
+        <textarea placeholder="Enter the description" className="border-2 border-blue-300 rounded-xl py-1 px-7" value={desc} onChange={(e) => setDesc(e.target.value)} />
+        <div className="flex gap-3">
+          <button className="py-1 rounded text-white cursor-pointer px-4 bg-blue-600" onClick={handleAdd}>Save</button>
+          <button className="py-1 rounded text-white cursor-pointer px-4 bg-red-600" onClick={closeAdd}>Cancel</button>
         </div>
-      )}
-
-      {isOpenEdit && (
-        <div className="w-[300px] m-auto py-7 gap-5 flex flex-col justify-center items-center">
-          <input type="text" className="border-2 border-blue-300 rounded-xl py-1 px-5" value={task} onChange={(e) => setTask(e.target.value)} />
-          <textarea className="border-2 border-blue-300 rounded-xl py-1 px-7" value={desc} onChange={(e) => setDesc(e.target.value)} />
-          <div className="flex gap-3">
-            <button className="py-1 rounded text-white cursor-pointer px-4 bg-blue-600" onClick={handleEdit}>Save</button>
-            <button className="py-1 rounded text-white cursor-pointer px-4 bg-red-600" onClick={closeEdit}>Cancel</button>
-          </div>
-        </div>
-      )}
-
-      <div className="flex flex-wrap gap-10 items-center">
-        {data.map(task => (
-          <div key={task.id} className="w-[280px] h-[150px] rounded flex flex-col items-center text-center justify-center shadow-2xl">
-            <h2 className="font-bold py-2 text-xl">{task.title}</h2>
-            <p>{task.description}</p>
-            <div className="flex gap-3 py-3 justify-center">
-              <button className="py-1 rounded text-white cursor-pointer px-4 bg-red-600" onClick={() => handleDelete(task.id)}>Delete</button>
-              <button className="py-1 rounded text-white cursor-pointer px-4 bg-blue-600" onClick={() => openEdit(task.id)}>Edit</button>
-              <div className="flex gap-2 items-center">
-                <input type="checkbox" className="w-[20px] h-[20px]" checked={task.status} onChange={() => toggleChange(task.id)} />
-                <p style={{ color: task.status ? 'green' : 'red' }}>{task.status ? 'Active' : 'Inactive'}</p>
-              </div>
-            </div>
-          </div>
-        ))}
       </div>
+    )}
+  
+    {isOpenEdit && (
+      <div className="w-[300px] m-auto py-7 gap-5 flex flex-col justify-center items-center">
+        <input type="text" className="border-2 border-blue-300 rounded-xl py-1 px-5" value={task} onChange={(e) => setTask(e.target.value)} />
+        <textarea className="border-2 border-blue-300 rounded-xl py-1 px-7" value={desc} onChange={(e) => setDesc(e.target.value)} />
+        <div className="flex gap-3">
+          <button className="py-1 rounded text-white cursor-pointer px-4 bg-blue-600" onClick={handleEdit}>Save</button>
+          <button className="py-1 rounded text-white cursor-pointer px-4 bg-red-600" onClick={closeEdit}>Cancel</button>
+        </div>
+      </div>
+    )}
+  
+    <div className="w-full overflow-x-auto">
+      <table className="w-full border-collapse">
+        <thead className="bg-gray-200">
+          <tr>
+            <th className="px-4 py-2 text-left">Title</th>
+            <th className="px-4 py-2 text-left">Description</th>
+            <th className="px-4 py-2 text-left">Status</th>
+            <th className="px-4 py-2 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map(task => (
+            <tr key={task.id} className="border-b">
+              <td className="px-4 py-2">{task.title}</td>
+              <td className="px-4 py-2">{task.description}</td>
+              <td className="px-4 py-2">
+                <span style={{ color: task.status ? 'green' : 'red' }}>
+                  {task.status ? 'Active' : 'Inactive'}
+                </span>
+              </td>
+              <td className="px-4 py-2">
+                <div className="flex gap-3 justify-center">
+                  <button className="py-1 rounded text-white cursor-pointer px-4 bg-red-600" onClick={() => handleDelete(task.id)}>Delete</button>
+                  <button className="py-1 rounded text-white cursor-pointer px-4 bg-blue-600" onClick={() => openEdit(task.id)}>Edit</button>
+                  <input type="checkbox" className="w-[20px] h-[20px]" checked={task.status} onChange={() => toggleChange(task.id)} />
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
+  </div>  
   );
 }
 
