@@ -156,7 +156,7 @@ const App:React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map(task => (
+          {data.length > 0 ? data.map(task => (
             <tr key={task.id} className="border-b">
               <td className="px-4 py-2">{task.title}</td>
               <td className="px-4 py-2">{task.description}</td>
@@ -173,7 +173,7 @@ const App:React.FC = () => {
                 </div>
               </td>
             </tr>
-          ))}
+          )): "Not found"}
         </tbody>
       </table>
     </div>
